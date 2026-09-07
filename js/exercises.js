@@ -4,6 +4,8 @@ window.EX = (function () {
   const esc = s => Z.esc(s), md = s => Z.md(s);
   const norm = s => String(s ?? '').toLowerCase().replace(/[’ʼ`´‘]/g, "'").replace(/\s+/g, ' ').replace(/[.,!?;:]+$/, '').trim();
   const normNum = s => String(s ?? '').replace(/\s+/g, '').replace(',', '.');
+  const isNumLike = s => /^-?\d[\d\s]*([.,]\d+)?$/.test(String(s ?? '').trim());
+  const sameNum = (a, b) => isNumLike(a) && isNumLike(b) && Math.abs(Number(normNum(a)) - Number(normNum(b))) < 1e-9;
   const isAuto = t => AUTO.has(t);
   const isManual = t => !AUTO.has(t);
 
@@ -21,9 +23,9 @@ window.EX = (function () {
       case 'choice': return { score: ans === ex.answer ? 1 : 0, complete: ans != null };
       case 'multi': { const a = new Set(ans || []), c = new Set(ex.answer); let hit = 0, wrong = 0; a.forEach(i => c.has(i) ? hit++ : wrong++); const exact = hit === c.size && wrong === 0; return { score: exact ? 1 : Math.max(0, (hit - wrong) / c.size), complete: a.size > 0 }; }
       case 'truefalse': { let ok = 0, n = 0; const det = []; ex.items.forEach((it, i) => { const v = (ans || {})[i]; if (v != null) n++; const g = v === it.answer; if (g) ok++; det.push(g); }); return { score: ok / ex.items.length, complete: n === ex.items.length, detail: det }; }
-      case 'fill': { const bl = fillParts(ex.text).filter(p => p.t === 'b'); let ok = 0; const det = []; bl.forEach((p, i) => { const v = norm((ans || {})[i]); const g = p.v.some(x => norm(x) === v); if (g) ok++; det.push(g); }); return { score: bl.length ? ok / bl.length : 0, complete: bl.every((p, i) => norm((ans || {})[i]) !== ''), detail: det }; }
+      case 'fill': { const bl = fillParts(ex.text).filter(p => p.t === 'b'); let ok = 0; const det = []; bl.forEach((p, i) => { const v = norm((ans || {})[i]); const g = p.v.some(x => norm(x) === v || sameNum(x, v)); if (g) ok++; det.push(g); }); return { score: bl.length ? ok / bl.length : 0, complete: bl.every((p, i) => norm((ans || {})[i]) !== ''), detail: det }; }
       case 'number': { const v = normNum(ans), a = normNum(ex.answer); const g = v !== '' && !isNaN(Number(v)) && Math.abs(Number(v) - Number(a)) < 1e-9; return { score: g ? 1 : 0, complete: v !== '' }; }
-      case 'input': { const v = norm(ans); return { score: answerList(ex).some(x => norm(x) === v) ? 1 : 0, complete: v !== '' }; }
+      case 'input': { const v = norm(ans); return { score: answerList(ex).some(x => norm(x) === v || sameNum(x, v)) ? 1 : 0, complete: v !== '' }; }
       case 'match': { let ok = 0; const det = []; ex.pairs.forEach((p, i) => { const g = (ans || {})[i] === String(p[1]); if (g) ok++; det.push(g); }); return { score: ok / ex.pairs.length, complete: ex.pairs.every((p, i) => (ans || {})[i]), detail: det }; }
       case 'order': { const cur = ans || []; let ok = 0; const det = []; ex.items.forEach((it, i) => { const g = cur[i] === it; if (g) ok++; det.push(g); }); return { score: ok === ex.items.length ? 1 : ok / ex.items.length, complete: cur.length === ex.items.length, detail: det }; }
       case 'sort': { const all = []; Object.entries(ex.groups).forEach(([g, items]) => items.forEach(it => all.push([String(it), g]))); let ok = 0; const det = {}; all.forEach(([it, g]) => { const good = (ans || {})[it] === g; if (good) ok++; det[it] = good; }); return { score: all.length ? ok / all.length : 0, complete: all.every(([it]) => (ans || {})[it]), detail: det }; }
