@@ -162,5 +162,5 @@ th{font-size:.82rem;text-transform:uppercase;letter-spacing:.03em;color:var(--mu
 .pill-bad{color:var(--bad);font-weight:800}
 .pill-warn{color:var(--warn);font-weight:800}
 footer{color:var(--muted);text-align:center;padding:24px;font-size:.85rem}
-@media (max-width:640px){html{font-size:16px}.top{padding:8px 10px}.top nav a{padding:5px 9px;font-size:.85rem}.wrap{padding:10px}.card{padding:14px}.ex{padding:12px}}
+@media (max-width:760px){html{font-size:16px}.top{padding:8px 10px;gap:8px}.top .brand{flex:1 1 60%}.top .me{order:2;flex:0 0 auto;margin-left:auto}.top nav{order:3;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;gap:2px;scrollbar-width:none;padding-bottom:2px}.top nav::-webkit-scrollbar{display:none}.top nav a{padding:5px 9px;font-size:.85rem;white-space:nowrap}.top .name{display:none}.wrap{padding:10px}.card{padding:14px}.ex{padding:12px}.lesson-row{flex-wrap:wrap}.lesson-row .t{flex-basis:100%;order:3}h1{font-size:1.4rem}}
 @media print{.top,.steps,.btn,.check{display:none!important}.card,.ex{box-shadow:none;border:1px solid #ccc}}
