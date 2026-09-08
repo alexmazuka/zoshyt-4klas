@@ -1,7 +1,7 @@
 {
-"generated": "2026-09-07",
+"generated": "2026-09-08",
 "total": 385,
-"written": 5,
+"written": 143,
 "lessons": [
 {
 "id": "math-w01-d2",
@@ -40,7 +40,7 @@
 "title": "Вступ. Як досліджувати світ: спостереження, дослід, джерела інформації",
 "brief": "методи дослідження, план досліду, щоденник спостережень",
 "file": "data/lessons/yds/yds-w01-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "inf-w01-d2",
@@ -53,7 +53,7 @@
 "title": "Правила безпечної поведінки під час роботи з комп'ютерними пристроями. Повторення",
 "brief": "постава, відстань до екрана, перерви, час за екраном",
 "file": "data/lessons/inf/inf-w01-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "music-w01-d2",
@@ -66,7 +66,7 @@
 "title": "Музика навколо нас. Українська народна пісня — душа народу (повторення)",
 "brief": "види музики, слухання, спів",
 "file": "data/lessons/music/music-w01-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w01-d3",
@@ -79,7 +79,7 @@
 "title": "Порівнюємо трицифрові числа. Числовий промінь",
 "brief": "порівняння за розрядами, знаки >, <, =; розташування чисел на промені",
 "file": "data/lessons/math/math-w01-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w01-d3",
@@ -118,7 +118,7 @@
 "title": "Людина — живий організм. Органи і системи органів",
 "brief": "клітина, органи, системи; узгоджена робота організму",
 "file": "data/lessons/yds/yds-w01-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w01-d3",
@@ -144,7 +144,7 @@
 "title": "Узагальнюємо знання про арифметичні дії: назви компонентів і результатів, взаємозв'язок дій",
 "brief": "доданок, сума, зменшуване, від'ємник, різниця, множник, добуток, ділене, дільник, частка; перевірка дій",
 "file": "data/lessons/math/math-w01-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w01-d4",
@@ -157,7 +157,7 @@
 "title": "Основні ознаки тексту: тема, мета, заголовок",
 "brief": "добір заголовка, визначення теми і головної думки",
 "file": "data/lessons/ukr/ukr-w01-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w01-d4",
@@ -170,7 +170,7 @@
 "title": "Прислів'я і приказки про книгу та навчання. «Казка про книгу»",
 "brief": "оригінальна казка + народні прислів'я про книгу",
 "file": "data/lessons/read/read-w01-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "design-w01-d4",
@@ -183,7 +183,7 @@
 "title": "Безпека праці. Інструменти й матеріали. Організація робочого місця",
 "brief": "ножиці, клей, лінійка, шило — правила",
 "file": "data/lessons/design/design-w01-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "art-w01-d4",
@@ -196,7 +196,7 @@
 "title": "Мова образотворчого мистецтва: види, жанри, матеріали. Осінній пейзаж аквареллю",
 "brief": "живопис, графіка, скульптура, архітектура, декоративне мистецтво",
 "file": "data/lessons/art/art-w01-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w01-d5",
@@ -209,7 +209,7 @@
 "title": "Досліджуємо залежність результату арифметичної дії від зміни компонента",
 "brief": "як змінюється сума/різниця/добуток/частка при зміні одного компонента",
 "file": "data/lessons/math/math-w01-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w01-d5",
@@ -222,7 +222,7 @@
 "title": "Засоби зв'язності тексту: займенники, синоніми, повтори",
 "brief": "як речення зв'язуються між собою",
 "file": "data/lessons/ukr/ukr-w01-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w01-d5",
@@ -235,7 +235,7 @@
 "title": "Classroom language and the alphabet",
 "brief": "listen, read, repeat, open, shut, cut, take, sing, play, copy, draw; spelling names",
 "file": "data/lessons/eng/eng-w01-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w01-d5",
@@ -248,7 +248,7 @@
 "title": "Опорно-рухова система: скелет і м'язи. Постава",
 "brief": "кістки, суглоби, м'язи; правила збереження постави",
 "file": "data/lessons/yds/yds-w01-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w01-d5",
@@ -261,7 +261,7 @@
 "title": "Правильна постава. Комплекс ранкової гімнастики № 1",
 "brief": "",
 "file": "data/lessons/pe/pe-w01-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w02-d1",
@@ -274,7 +274,7 @@
 "title": "Усне додавання і віднімання в межах 1000",
 "brief": "прийоми усних обчислень: порозрядно, округленням, частинами",
 "file": "data/lessons/math/math-w02-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w02-d1",
@@ -287,7 +287,7 @@
 "title": "Типи текстів: розповідь, опис, міркування",
 "brief": "розпізнавання типів, ознаки кожного",
 "file": "data/lessons/ukr/ukr-w02-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w02-d1",
@@ -300,7 +300,7 @@
 "title": "Осінь у поезії: Яків Щоголів «Осінь», Леонід Глібов. Виразне читання",
 "brief": "тексти суспільного надбання; настрій, образи, рима, ритм",
 "file": "data/lessons/read/read-w02-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w02-d1",
@@ -313,7 +313,7 @@
 "title": "Review: numbers 1–20, colours, days of the week; to be / have got",
 "brief": "I am / you are / he is; I have got / she has got",
 "file": "data/lessons/eng/eng-w02-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w02-d1",
@@ -326,7 +326,7 @@
 "title": "Легка атлетика: техніка бігу. Біг на місці й у русі",
 "brief": "",
 "file": "data/lessons/pe/pe-w02-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w02-d2",
@@ -339,7 +339,7 @@
 "title": "Письмове додавання і віднімання в межах 1000",
 "brief": "запис у стовпчик, перехід через розряд, перевірка",
 "file": "data/lessons/math/math-w02-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w02-d2",
@@ -352,7 +352,7 @@
 "title": "Будова тексту: зачин, основна частина, кінцівка. Абзац",
 "brief": "поділ тексту на абзаци",
 "file": "data/lessons/ukr/ukr-w02-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w02-d2",
@@ -365,7 +365,7 @@
 "title": "Дихальна система. Чисте повітря",
 "brief": "ніс, трахея, бронхи, легені; чому шкідливе куріння і забруднене повітря",
 "file": "data/lessons/yds/yds-w02-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "inf-w02-d2",
@@ -378,7 +378,7 @@
 "title": "Інформація навколо нас. Дії з інформацією",
 "brief": "отримання, зберігання, передавання, опрацювання; види за способом сприйняття",
 "file": "data/lessons/inf/inf-w02-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "music-w02-d2",
@@ -391,7 +391,7 @@
 "title": "Жанри народної пісні: колискові, жартівливі, календарно-обрядові",
 "brief": "«Ой ходить сон», веснянки, жниварські",
 "file": "data/lessons/music/music-w02-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w02-d3",
@@ -404,7 +404,7 @@
 "title": "Усне множення і ділення в межах 1000. Таблиця множення",
 "brief": "табличні випадки, множення суми на число, ділення суми на число",
 "file": "data/lessons/math/math-w02-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w02-d3",
@@ -417,7 +417,7 @@
 "title": "Оповідання про дружбу. Характеристика персонажа за його вчинками",
 "brief": "оригінальне оповідання про однокласників; план характеристики героя",
 "file": "data/lessons/read/read-w02-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w02-d3",
@@ -430,7 +430,7 @@
 "title": "Our preferences: I like / I don't like + -ing",
 "brief": "swimming, reading, dancing, drawing, playing football",
 "file": "data/lessons/eng/eng-w02-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w02-d3",
@@ -443,7 +443,7 @@
 "title": "Кровоносна система: серце і судини. Пульс",
 "brief": "серце — насос, артерії, вени; як виміряти пульс",
 "file": "data/lessons/yds/yds-w02-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w02-d3",
@@ -456,7 +456,7 @@
 "title": "Стрибки в довжину з місця. Гра «Хто далі»",
 "brief": "",
 "file": "data/lessons/pe/pe-w02-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w02-d4",
@@ -469,7 +469,7 @@
 "title": "Множимо і ділимо різними способами. Множення і ділення на 10, 100",
 "brief": "позатабличні випадки, прийоми, зв'язок множення і ділення",
 "file": "data/lessons/math/math-w02-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w02-d4",
@@ -482,7 +482,7 @@
 "title": "Складання плану тексту",
 "brief": "пункти плану як заголовки абзаців",
 "file": "data/lessons/ukr/ukr-w02-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w02-d4",
@@ -495,7 +495,7 @@
 "title": "Науково-популярний текст: як птахи готуються до відльоту",
 "brief": "відрізняємо художній і науково-популярний текст; факти про перелітних птахів України (лелека, ластівка, журавель)",
 "file": "data/lessons/read/read-w02-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "design-w02-d4",
@@ -508,7 +508,7 @@
 "title": "Папір і картон: властивості. Симетричне вирізання (листочки, метелики)",
 "brief": "складання навпіл, шаблон",
 "file": "data/lessons/design/design-w02-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "art-w02-d4",
@@ -521,7 +521,7 @@
 "title": "Колір: основні й похідні, теплі й холодні. Колірне коло",
 "brief": "змішування кольорів, гама",
 "file": "data/lessons/art/art-w02-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w02-d5",
@@ -534,7 +534,7 @@
 "title": "Ділення з остачею",
 "brief": "остача завжди менша за дільник; перевірка: дільник × частка + остача",
 "file": "data/lessons/math/math-w02-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w02-d5",
@@ -547,7 +547,7 @@
 "title": "Народна мудрість про осінь: прикмети, загадки, прислів'я",
 "brief": "фольклор, малі жанри",
 "file": "data/lessons/read/read-w02-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w02-d5",
@@ -560,7 +560,7 @@
 "title": "Our favourite games: we / our, they / their",
 "brief": "board games, video games, hide-and-seek, chess",
 "file": "data/lessons/eng/eng-w02-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w02-d5",
@@ -573,7 +573,7 @@
 "title": "Травна система. Здорове харчування",
 "brief": "шлях їжі; піраміда харчування; вода",
 "file": "data/lessons/yds/yds-w02-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w02-d5",
@@ -586,7 +586,7 @@
 "title": "Метання малого м'яча в ціль. Влучність",
 "brief": "мішень на стіні, м'який м'яч",
 "file": "data/lessons/pe/pe-w02-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w03-d1",
@@ -599,7 +599,7 @@
 "title": "Математичні вирази. Порядок виконання дій. Вирази з дужками",
 "brief": "числові та буквені вирази, значення виразу, порядок дій",
 "file": "data/lessons/math/math-w03-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w03-d1",
@@ -612,7 +612,7 @@
 "title": "Розвиток мовлення: письмовий переказ тексту за планом",
 "brief": "докладний переказ невеликого тексту",
 "file": "data/lessons/ukr/ukr-w03-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w03-d1",
@@ -625,7 +625,7 @@
 "title": "Есе «Мій улюблений осінній день». Усне висловлювання",
 "brief": "структура есе: вступ, основна частина, висновок",
 "file": "data/lessons/read/read-w03-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w03-d1",
@@ -638,7 +638,7 @@
 "title": "My daily routine: What time do you get up?",
 "brief": "get up, wash my face, have breakfast, go to school, do homework, go to bed; telling the time (o'clock, half past)",
 "file": "data/lessons/eng/eng-w03-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w03-d1",
@@ -651,7 +651,7 @@
 "title": "Бігові вправи: прискорення, біг зі зміною напрямку",
 "brief": "",
 "file": "data/lessons/pe/pe-w03-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w03-d2",
@@ -664,7 +664,7 @@
 "title": "Рівняння і нерівності",
 "brief": "розв'язування рівнянь на знаходження невідомого компонента, перевірка; нерівності зі змінною добором",
 "file": "data/lessons/math/math-w03-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w03-d2",
@@ -677,7 +677,7 @@
 "title": "Тексти різних стилів. Медіатекст: замітка, оголошення, реклама",
 "brief": "розпізнавання, створення оголошення",
 "file": "data/lessons/ukr/ukr-w03-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w03-d2",
@@ -690,7 +690,7 @@
 "title": "Нервова система. Мозок. Сон і відпочинок",
 "brief": "головний і спинний мозок, нерви; чому важливо спати 9–10 годин",
 "file": "data/lessons/yds/yds-w03-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "inf-w03-d2",
@@ -703,7 +703,7 @@
 "title": "Мережа Інтернет. Браузер, сайт, адреса",
 "brief": "що таке інтернет, вебсторінка, URL, вкладки",
 "file": "data/lessons/inf/inf-w03-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "music-w03-d2",
@@ -716,7 +716,7 @@
 "title": "Музичні інструменти українців: бандура, кобза, трембіта, сопілка, цимбали",
 "brief": "тембр, як звучить кожен інструмент",
 "file": "data/lessons/music/music-w03-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w03-d3",
@@ -729,7 +729,7 @@
 "title": "Розв'язуємо задачі: прості й складені (повторення)",
 "brief": "короткий запис, схема, план розв'язування, відповідь; задачі на 2–3 дії",
 "file": "data/lessons/math/math-w03-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w03-d3",
@@ -742,7 +742,7 @@
 "title": "Діагностувальна робота № 1: аудіювання (робота з прослуханим текстом)",
 "brief": "текст для прослуховування (озвучити кнопкою або читає дорослий) + 8 запитань",
 "file": "data/lessons/read/read-w03-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w03-d3",
@@ -755,7 +755,7 @@
 "title": "Adverbs of frequency: always, usually, often, sometimes, never",
 "brief": "word order: I always get up at 7.",
 "file": "data/lessons/eng/eng-w03-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w03-d3",
@@ -768,7 +768,7 @@
 "title": "Органи чуття: зір і слух. Як їх берегти",
 "brief": "будова ока і вуха спрощено; гігієна зору, гучний звук",
 "file": "data/lessons/yds/yds-w03-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w03-d3",
@@ -781,7 +781,7 @@
 "title": "Стрибки через скакалку: основи",
 "brief": "",
 "file": "data/lessons/pe/pe-w03-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w03-d4",
@@ -794,7 +794,7 @@
 "title": "Частини цілого. Дроби з чисельником 1",
 "brief": "половина, третина, чверть; знаходження частини від числа і числа за його частиною",
 "file": "data/lessons/math/math-w03-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w03-d4",
@@ -807,7 +807,7 @@
 "title": "Досліджуємо медіатексти: факт і думка. Безпека в медіа",
 "brief": "відрізняти факт від думки, перевірка інформації",
 "file": "data/lessons/ukr/ukr-w03-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w03-d4",
@@ -820,7 +820,7 @@
 "title": "Що таке міф. Давньогрецький міф про Прометея (переказ)",
 "brief": "власний переказ міфу; поняття міф, герой, боги",
 "file": "data/lessons/read/read-w03-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "design-w03-d4",
@@ -833,7 +833,7 @@
 "title": "Оригамі: базові форми. Журавлик або кораблик",
 "brief": "покрокова схема",
 "file": "data/lessons/design/design-w03-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "art-w03-d4",
@@ -846,7 +846,7 @@
 "title": "Композиція: центр, рівновага. Натюрморт «Смачний урожай»",
 "brief": "розташування предметів, передній і задній план",
 "file": "data/lessons/art/art-w03-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w03-d5",
@@ -859,7 +859,7 @@
 "title": "Діагностувальна робота № 1 (повторення вивченого у 3 класі)",
 "brief": "самостійна робота на 10–12 завдань з усіх тем повторення, оцінка за балами",
 "file": "data/lessons/math/math-w03-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w03-d5",
@@ -872,7 +872,7 @@
 "title": "Узагальнення знань про текст. Діагностувальна робота № 1",
 "brief": "тестові завдання про текст",
 "file": "data/lessons/ukr/ukr-w03-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w03-d5",
@@ -885,7 +885,7 @@
 "title": "What does your friend like? Present Simple: he/she likes, doesn't like",
 "brief": "3rd person -s; negative doesn't",
 "file": "data/lessons/eng/eng-w03-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w03-d5",
@@ -898,7 +898,7 @@
 "title": "Органи чуття: нюх, смак, дотик. Шкіра",
 "brief": "функції шкіри, гігієна",
 "file": "data/lessons/yds/yds-w03-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w03-d5",
@@ -911,7 +911,7 @@
 "title": "Естафети з предметами (домашній варіант)",
 "brief": "",
 "file": "data/lessons/pe/pe-w03-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w04-d1",
@@ -924,7 +924,7 @@
 "title": "Цікава математика: логічні задачі, головоломки, магічні квадрати",
 "brief": "нестандартні задачі, ребуси, задачі на кмітливість",
 "file": "data/lessons/math/math-w04-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w04-d1",
@@ -937,7 +937,7 @@
 "title": "Види речень за метою висловлювання та за інтонацією",
 "brief": "розповідні, питальні, спонукальні; окличні; розділові знаки",
 "file": "data/lessons/ukr/ukr-w04-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w04-d1",
@@ -950,7 +950,7 @@
 "title": "Українські міфи: «Зоряний Віз», «Берегиня» (переказ)",
 "brief": "власний переказ українських міфів про сузір'я і Берегиню",
 "file": "data/lessons/read/read-w04-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w04-d1",
@@ -963,7 +963,7 @@
 "title": "Questions in Present Simple: Does he…? Yes, he does. / No, he doesn't.",
 "brief": "short answers",
 "file": "data/lessons/eng/eng-w04-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w04-d1",
@@ -976,7 +976,7 @@
 "title": "Витривалість: рівномірний біг або швидка ходьба 6 хвилин",
 "brief": "",
 "file": "data/lessons/pe/pe-w04-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w04-d2",
@@ -989,7 +989,7 @@
 "title": "Письмове множення на одноцифрове число: знайомимось з алгоритмом",
 "brief": "запис у стовпчик, множення порозрядно, без переходу через розряд",
 "file": "data/lessons/math/math-w04-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w04-d2",
@@ -1002,7 +1002,7 @@
 "title": "Звертання. Розділові знаки при звертанні",
 "brief": "кома при звертанні, форма кличного відмінка (Оленко, Іване)",
 "file": "data/lessons/ukr/ukr-w04-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w04-d2",
@@ -1015,7 +1015,7 @@
 "title": "Практична робота: вимірюємо пульс, зріст, частоту дихання",
 "brief": "дослід: пульс у спокої і після присідань; таблиця результатів",
 "file": "data/lessons/yds/yds-w04-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "inf-w04-d2",
@@ -1028,7 +1028,7 @@
 "title": "Пошук інформації в Інтернеті. Ключові слова",
 "brief": "пошукові системи, точні запити, безпечний пошук",
 "file": "data/lessons/inf/inf-w04-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "music-w04-d2",
@@ -1041,7 +1041,7 @@
 "title": "Ритм і темп. Метр. Сильні і слабкі долі",
 "brief": "плескання ритму, розмір 2/4, 3/4",
 "file": "data/lessons/music/music-w04-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w04-d3",
@@ -1054,7 +1054,7 @@
 "title": "Письмове множення на одноцифрове число: вправляємось",
 "brief": "з переходом через розряд, перевірка",
 "file": "data/lessons/math/math-w04-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w04-d3",
@@ -1067,7 +1067,7 @@
 "title": "Міфи народів світу про створення світу (давньоіндійський, скандинавський) — переказ",
 "brief": "порівняння уявлень різних народів",
 "file": "data/lessons/read/read-w04-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w04-d3",
@@ -1080,7 +1080,7 @@
 "title": "Sports clubs: I go to a sports club",
 "brief": "football, swimming, karate, gymnastics, tennis; Where do you go? When?",
 "file": "data/lessons/eng/eng-w04-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w04-d3",
@@ -1093,7 +1093,7 @@
 "title": "Режим дня школяра. Особиста гігієна",
 "brief": "складання власного режиму дня для домашнього навчання",
 "file": "data/lessons/yds/yds-w04-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w04-d3",
@@ -1106,7 +1106,7 @@
 "title": "Рухливі ігри народів України: «Гуси-лебеді», «Квач»",
 "brief": "",
 "file": "data/lessons/pe/pe-w04-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w04-d4",
@@ -1119,7 +1119,7 @@
 "title": "Множення чисел, що закінчуються нулями. Множення з нулем усередині числа",
 "brief": "наприклад 340·3, 205·4",
 "file": "data/lessons/math/math-w04-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w04-d4",
@@ -1132,7 +1132,7 @@
 "title": "Головні члени речення: підмет і присудок",
 "brief": "граматична основа, питання до підмета і присудка",
 "file": "data/lessons/ukr/ukr-w04-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w04-d4",
@@ -1145,7 +1145,7 @@
 "title": "Поняття про легенду. Українська легенда «Калинонька» (переказ)",
 "brief": "чим легенда відрізняється від міфу і казки",
 "file": "data/lessons/read/read-w04-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "design-w04-d4",
@@ -1158,7 +1158,7 @@
 "title": "Аплікація з природних матеріалів: осіння композиція",
 "brief": "листя, насіння, гілочки; сушіння",
 "file": "data/lessons/design/design-w04-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "art-w04-d4",
@@ -1171,7 +1171,7 @@
 "title": "Лінія і штрих. Графіка: малюємо дерева і листя олівцем",
 "brief": "види ліній, штрихування, тон",
 "file": "data/lessons/art/art-w04-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w04-d5",
@@ -1184,7 +1184,7 @@
 "title": "Спосіб відношень у розв'язуванні задач",
 "brief": "у скільки разів більше — стільки ж разів більший результат",
 "file": "data/lessons/math/math-w04-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w04-d5",
@@ -1197,7 +1197,7 @@
 "title": "Давньогрецька легенда про соняшник (Клітія) — переказ",
 "brief": "пояснювальна легенда про походження рослини",
 "file": "data/lessons/read/read-w04-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w04-d5",
@@ -1210,7 +1210,7 @@
 "title": "My hobby",
 "brief": "collecting, cooking, painting, playing the piano; My hobby is…",
 "file": "data/lessons/eng/eng-w04-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w04-d5",
@@ -1223,7 +1223,7 @@
 "title": "Безпека вдома: електрика, газ, вода, ліки, гострі предмети",
 "brief": "правила, номери служб",
 "file": "data/lessons/yds/yds-w04-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w04-d5",
@@ -1236,7 +1236,7 @@
 "title": "Метання на дальність (м'яч, паперовий літачок). Координація",
 "brief": "",
 "file": "data/lessons/pe/pe-w04-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w05-d1",
@@ -1249,7 +1249,7 @@
 "title": "Задачі на знаходження четвертого пропорційного (зведення до одиниці)",
 "brief": "ціна–кількість–вартість, маса одного предмета",
 "file": "data/lessons/math/math-w05-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w05-d1",
@@ -1262,7 +1262,7 @@
 "title": "Другорядні члени речення. Зв'язок слів у реченні",
 "brief": "питання від слова до слова, встановлення зв'язку",
 "file": "data/lessons/ukr/ukr-w05-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w05-d1",
@@ -1275,7 +1275,7 @@
 "title": "Легенди рідного краю: про Дніпро, про заснування Києва (Кий, Щек, Хорив і Либідь)",
 "brief": "переказ літописної легенди",
 "file": "data/lessons/read/read-w05-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w05-d1",
@@ -1288,7 +1288,7 @@
 "title": "My collections: Have you got…? How many…?",
 "brief": "stamps, stickers, coins, toy cars; plural nouns",
 "file": "data/lessons/eng/eng-w05-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w05-d1",
@@ -1301,7 +1301,7 @@
 "title": "Комплекс вправ для м'язів живота і спини",
 "brief": "",
 "file": "data/lessons/pe/pe-w05-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w05-d2",
@@ -1314,7 +1314,7 @@
 "title": "Задачі на знаходження четвертого пропорційного (спосіб відношень)",
 "brief": "порівняння двох способів розв'язування",
 "file": "data/lessons/math/math-w05-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w05-d2",
@@ -1327,7 +1327,7 @@
 "title": "Складаємо і поширюємо речення",
 "brief": "поширення другорядними членами",
 "file": "data/lessons/ukr/ukr-w05-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w05-d2",
@@ -1340,7 +1340,7 @@
 "title": "Безпека на вулиці і дорозі: пішохід, велосипедист, пасажир",
 "brief": "дорожні знаки, світлофор, шолом, ремінь безпеки",
 "file": "data/lessons/yds/yds-w05-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "inf-w05-d2",
@@ -1353,7 +1353,7 @@
 "title": "Інформаційна взаємодія: електронна пошта, повідомлення, етикет спілкування",
 "brief": "адреса електронної пошти, тема листа, ввічливість онлайн",
 "file": "data/lessons/inf/inf-w05-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "music-w05-d2",
@@ -1366,7 +1366,7 @@
 "title": "Мелодія. Лад: мажор і мінор. Настрій музики",
 "brief": "веселий і сумний лад, приклади",
 "file": "data/lessons/music/music-w05-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w05-d3",
@@ -1379,7 +1379,7 @@
 "title": "Письмове ділення на одноцифрове число: знайомимось з алгоритмом",
 "brief": "визначення першого неповного діленого, кількості цифр у частці",
 "file": "data/lessons/math/math-w05-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w05-d3",
@@ -1392,7 +1392,7 @@
 "title": "Українські легенди «Криниця-журавель» та «Сумна пісня соловейка» (переказ)",
 "brief": "складання плану, переказ за планом",
 "file": "data/lessons/read/read-w05-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w05-d3",
@@ -1405,7 +1405,7 @@
 "title": "Present Continuous: I am reading now. am / is / are + -ing",
 "brief": "now, at the moment; spelling of -ing forms",
 "file": "data/lessons/eng/eng-w05-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w05-d3",
@@ -1418,7 +1418,7 @@
 "title": "Безпека в інтернеті: паролі, незнайомці, персональні дані",
 "brief": "правила спілкування онлайн, кібербулінг, до кого звертатись",
 "file": "data/lessons/yds/yds-w05-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "pe-w05-d3",
@@ -1431,7 +1431,7 @@
 "title": "Стрибки в довжину і у висоту: закріплення",
 "brief": "",
 "file": "data/lessons/pe/pe-w05-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "math-w05-d4",
@@ -1795,7 +1795,7 @@
 "title": "Поезія про рідну землю. Тарас Шевченко (уривки з поезій). Виразне читання",
 "brief": "суспільне надбання: «Садок вишневий коло хати», уривки «Зоре моя вечірняя»",
 "file": "data/lessons/read/read-w06-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "design-w06-d4",
@@ -1847,7 +1847,7 @@
 "title": "Київська Русь. Оповідання про Софію Київську та князя Ярослава Мудрого",
 "brief": "оригінальний пізнавальний текст",
 "file": "data/lessons/read/read-w06-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w06-d5",
@@ -1912,7 +1912,7 @@
 "title": "Багатозначні слова",
 "brief": "одне слово — кілька значень (ручка, ключ, коса)",
 "file": "data/lessons/ukr/ukr-w07-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w07-d1",
@@ -1925,7 +1925,7 @@
 "title": "Оповідання про мудрість і доброту (за мотивами давніх часів)",
 "brief": "оригінальне оповідання-притча",
 "file": "data/lessons/read/read-w07-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w07-d1",
@@ -1977,7 +1977,7 @@
 "title": "Пряме і переносне значення слів",
 "brief": "золоте кільце — золоті руки",
 "file": "data/lessons/ukr/ukr-w07-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w07-d2",
@@ -2107,7 +2107,7 @@
 "title": "Синоніми. Синонімічний ряд",
 "brief": "добір синонімів, уникнення повторів",
 "file": "data/lessons/ukr/ukr-w07-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w07-d4",
@@ -2419,7 +2419,7 @@
 "title": "Лічимо тисячами. Клас одиниць і клас тисяч",
 "brief": "1000, 2000, … 10 000; таблиця класів",
 "file": "data/lessons/math/math-w08-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w08-d4",
@@ -2484,7 +2484,7 @@
 "title": "Лічимо в межах багатоцифрових чисел: десятки тисяч, сотні тисяч",
 "brief": "розряди класу тисяч",
 "file": "data/lessons/math/math-w08-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w08-d5",
@@ -2549,7 +2549,7 @@
 "title": "Читаємо і записуємо багатоцифрові числа",
 "brief": "читання по класах, запис з пропуском між класами",
 "file": "data/lessons/math/math-w09-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w09-d1",
@@ -2575,7 +2575,7 @@
 "title": "Прапор України: вірш і пізнавальний текст",
 "brief": "оригінальний вірш, значення кольорів, День прапора 23 серпня",
 "file": "data/lessons/read/read-w09-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w09-d1",
@@ -2614,7 +2614,7 @@
 "title": "Розрядний склад багатоцифрових чисел. Таблиця розрядів і класів",
 "brief": "визначення розряду цифри, кількість одиниць кожного розряду",
 "file": "data/lessons/math/math-w09-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w09-d2",
@@ -2679,7 +2679,7 @@
 "title": "Утворюємо багатоцифрові числа різними способами. Сума розрядних доданків",
 "brief": "54 307 = 50 000 + 4000 + 300 + 7",
 "file": "data/lessons/math/math-w09-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w09-d3",
@@ -2744,7 +2744,7 @@
 "title": "Порівнюємо багатоцифрові числа",
 "brief": "за кількістю цифр, за розрядами; упорядкування",
 "file": "data/lessons/math/math-w09-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w09-d4",
@@ -2809,7 +2809,7 @@
 "title": "Додаємо і віднімаємо на основі розрядного складу числа",
 "brief": "45 000 + 300, 27 480 − 400",
 "file": "data/lessons/math/math-w09-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w09-d5",
@@ -2822,7 +2822,7 @@
 "title": "Частини слова: основа і закінчення, корінь, префікс, суфікс",
 "brief": "розбір слова за будовою",
 "file": "data/lessons/ukr/ukr-w09-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w09-d5",
@@ -2874,7 +2874,7 @@
 "title": "Додаємо і віднімаємо на основі нумерації: ±1, ±10, ±100, ±1000",
 "brief": "попереднє і наступне число, числовий промінь",
 "file": "data/lessons/math/math-w10-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w10-d1",
@@ -2887,7 +2887,7 @@
 "title": "Спільнокореневі слова. Утворення слів за допомогою префіксів",
 "brief": "розрізнення спільнокореневих слів і форм слова",
 "file": "data/lessons/ukr/ukr-w10-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w10-d1",
@@ -2939,7 +2939,7 @@
 "title": "Визначаємо загальну кількість одиниць певного розряду",
 "brief": "скільки всього сотень, десятків у числі 45 670",
 "file": "data/lessons/math/math-w10-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w10-d2",
@@ -2952,7 +2952,7 @@
 "title": "Утворення слів за допомогою суфіксів",
 "brief": "зменшувально-пестливі суфікси, суфікси назв професій",
 "file": "data/lessons/ukr/ukr-w10-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "yds-w10-d2",
@@ -3004,7 +3004,7 @@
 "title": "Округлення багатоцифрових чисел",
 "brief": "до десятків, сотень, тисяч; знак ≈",
 "file": "data/lessons/math/math-w10-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w10-d3",
@@ -3069,7 +3069,7 @@
 "title": "Клас мільйонів. Числа понад мільйон (ознайомлення)",
 "brief": "мільйон, читання чисел до 1 000 000 і трохи більше",
 "file": "data/lessons/math/math-w10-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w10-d4",
@@ -3134,7 +3134,7 @@
 "title": "Арифметичні дії з круглими числами",
 "brief": "усно: 30 000 + 20 000, 700 000 − 200 000",
 "file": "data/lessons/math/math-w10-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w10-d5",
@@ -3199,7 +3199,7 @@
 "title": "Множимо і ділимо круглі числа",
 "brief": "4000·3, 60 000:2, 120 000:40",
 "file": "data/lessons/math/math-w11-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w11-d1",
@@ -3537,7 +3537,7 @@
 "title": "Наголос. Наголошування загальновживаних слів",
 "brief": "орфоепічні норми: вИпадок, новИй, кіломЕтр",
 "file": "data/lessons/ukr/ukr-w12-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w12-d1",
@@ -3719,7 +3719,7 @@
 "title": "Узагальнюємо знання про додавання і віднімання: закони, перевірка",
 "brief": "переставний і сполучний закони, перевірка додавання відніманням і навпаки",
 "file": "data/lessons/math/math-w12-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w12-d4",
@@ -3784,7 +3784,7 @@
 "title": "Письмове додавання багатоцифрових чисел",
 "brief": "у стовпчик з переходами через розряд",
 "file": "data/lessons/math/math-w12-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w12-d5",
@@ -3849,7 +3849,7 @@
 "title": "Письмове віднімання багатоцифрових чисел",
 "brief": "у стовпчик, віднімання з переходом через розряд",
 "file": "data/lessons/math/math-w13-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w13-d1",
@@ -3914,7 +3914,7 @@
 "title": "Віднімання від чисел з нулями. Кілька переходів через розряд",
 "brief": "50 000 − 23 456",
 "file": "data/lessons/math/math-w13-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w13-d2",
@@ -4447,7 +4447,7 @@
 "title": "Родинні традиції українців: свята і обряди (Миколай, Різдво)",
 "brief": "пізнавальний текст",
 "file": "data/lessons/read/read-w14-d5.json",
-"exists": false
+"exists": true
 },
 {
 "id": "eng-w14-d5",
@@ -4499,7 +4499,7 @@
 "title": "Взаємопов'язані величини: ціна, кількість, вартість (повторення)",
 "brief": "таблиця, обернені задачі",
 "file": "data/lessons/math/math-w15-d1.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w15-d1",
@@ -4564,7 +4564,7 @@
 "title": "Швидкість руху. Одиниці швидкості",
 "brief": "км/год, м/хв, м/с; що показує швидкість",
 "file": "data/lessons/math/math-w15-d2.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w15-d2",
@@ -4629,7 +4629,7 @@
 "title": "Правила знаходження шляху і часу руху",
 "brief": "s = v·t, t = s:v, v = s:t",
 "file": "data/lessons/math/math-w15-d3.json",
-"exists": false
+"exists": true
 },
 {
 "id": "read-w15-d3",
@@ -4694,7 +4694,7 @@
 "title": "Прості задачі на рух: знаходимо швидкість, час, відстань",
 "brief": "таблиця величин",
 "file": "data/lessons/math/math-w15-d4.json",
-"exists": false
+"exists": true
 },
 {
 "id": "ukr-w15-d4",
