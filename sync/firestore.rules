@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /families/{familyCode} {
+      // Доступ до документа сім'ї відкритий будь-кому, хто знає її код. Замість облікових записів
+      // «пароль» — сам код: він генерується випадково (10 символів без 0/O/1/I/L, у форматі
+      // XXXXX-XXXXX), тому вгадати чи перебрати його на практиці неможливо. Публічний ключ Firebase
+      // (apiKey у js/firebase-init.js) — не секрет, він лише вказує застосунку, до якого проєкту
+      // звертатися; саму базу захищають ці правила.
+      allow read, write: if familyCode.size() >= 8;
+    }
+  }
+}

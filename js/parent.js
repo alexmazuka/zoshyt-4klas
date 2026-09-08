@@ -28,7 +28,7 @@
     return `<div class="grid c3">${cards.map(c => `<div class="card" style="margin:0"><div style="font-size:1.6rem;font-weight:800">${c[0]}</div><small class="muted">${c[1]}</small>${c[2]}</div>`).join('')}</div>
       <div class="card"><h2 style="margin-top:0">Тижні семестру</h2><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(64px,1fr))">${weekCells}</div><small class="muted">зелений — тиждень виконано повністю; червоний — тиждень минув, є невиконані уроки; жовтий — у процесі.</small></div>
       <div class="card"><h2 style="margin-top:0">За предметами</h2><div class="table-wrap"><table><thead><tr><th>Предмет</th><th>Уроки</th><th></th><th>Сер. бал</th><th>ДЗ перевірено</th><th>Час</th></tr></thead><tbody>${subjRows}</tbody></table></div></div>
-      ${!s.syncUrl ? '<div class="notice">💡 Щоб бачити прогрес з іншого пристрою (наприклад, з телефону), налаштуйте синхронізацію з Google Таблицею у вкладці «Налаштування» або надсилайте щотижневий звіт у вкладці «Звіт».</div>' : `<div class="notice" style="border-color:var(--ok)">☁️ Синхронізація увімкнена. Останнє надсилання подій: ${Z.fmtDT(s.lastSync)}; знімок: ${Z.fmtDT(s.lastSnapshot)}.</div>`}`;
+      ${!s.familyCode ? '<div class="notice">💡 Щоб прогрес був спільним з іншим пристроєм (наприклад, вашим телефоном), підключіть «сімейний код» у вкладці «Налаштування».</div>' : `<div class="notice" style="border-color:${syncColor()}">${syncBadge()} Сімейний код: <b>${Z.esc(s.familyCode)}</b> · оновлено: ${Z.fmtDT(s.lastSync)}</div>`}`;
   }
 
   /* ---- Уроки ---- */
@@ -83,21 +83,43 @@
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="copy">Копіювати</button><a class="btn sec" id="tg" target="_blank" href="#">Надіслати в Telegram</a><a class="btn sec" id="mail" href="#">Надіслати e-mail</a></div></div>
       <div class="card"><h2 style="margin-top:0">Резервна копія прогресу</h2><p class="muted">Прогрес зберігається у браузері цього пристрою. Раз на тиждень робіть копію — файл можна відкрити на іншому пристрої через «Імпорт».</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="exp">⬇ Експортувати JSON</button><label class="btn sec">⬆ Імпортувати JSON<input type="file" id="imp" accept="application/json" hidden></label></div>
-      <p class="muted" style="margin-top:8px">Імпорт об'єднує дані: для кожного уроку зберігається новіший запис.</p></div>
-      <div class="card"><h2 style="margin-top:0">☁️ Хмара (Google Таблиця)</h2>${s.syncUrl ? `<p class="muted">Кожна подія автоматично надсилається в таблицю. Тут можна надіслати повний знімок прогресу або завантажити його на цьому пристрої.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="push">Надіслати знімок у хмару</button><button class="btn sec" id="pull">Завантажити знімок із хмари</button></div><p id="cloudmsg" class="muted"></p>` : '<p class="muted">Синхронізацію не налаштовано. Див. вкладку «Налаштування».</p>'}</div>`;
+      <p class="muted" style="margin-top:8px">Імпорт об'єднує дані: для кожного уроку зберігається новіший запис. Якщо підключено сімейний код (вкладка «Налаштування»), прогрес і так синхронізується автоматично — резервна копія потрібна лише як додаткова підстраховка.</p></div>`;
   }
+
+  /* ---- Синхронізація (стан) ---- */
+  function syncColor() { const st = Z.sync.status(); return st === 'on' ? 'var(--ok)' : st === 'error' ? 'var(--bad)' : st === 'connecting' ? 'var(--accent2)' : 'var(--line)'; }
+  function syncBadge() { const st = Z.sync.status(); return { on: '☁️✓', connecting: '☁️…', error: '☁️!', off: '☁️' }[st] || '☁️'; }
+  function syncStatusText() { const st = Z.sync.status(); return { on: "Підключено, дані в реальному часі", connecting: 'Підключення…', error: "Немає зв'язку (перевірте інтернет)", off: "Вимкнено" }[st] || st; }
 
   /* ---- Налаштування ---- */
   function settingsTab() {
     const s = Z.settings.get();
-    return `<div class="card"><h2 style="margin-top:0">Налаштування</h2>
+    const familyBlock = s.familyCode ? `
+      <div class="field"><label>Сімейний код цього пристрою</label>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><code style="font-size:1.2rem;font-weight:800;letter-spacing:.05em;background:#f3f4f6;padding:6px 14px;border-radius:8px">${Z.esc(s.familyCode)}</code><span style="color:${syncColor()}">● ${syncStatusText()}</span></div>
+        <small class="muted">Останнє надсилання: ${Z.fmtDT(s.lastPush)} · останнє отримання: ${Z.fmtDT(s.lastSync)}</small>
+      </div>
+      <div class="field"><label>Підключити ще один пристрій батьків (наприклад, телефон)</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sec sm" id="copyParentLink">Скопіювати посилання для кабінету батьків</button><button class="btn sec sm" id="copyChildLink">Скопіювати посилання для пристрою дитини</button></div>
+        <small class="muted">Відкрийте скопійоване посилання в браузері іншого пристрою — він одразу приєднається до цієї ж сім'ї.</small>
+      </div>
+      <button class="btn danger sm" id="leaveFamily">Відключити цей пристрій від сім'ї</button>`
+      : `
+      <div class="field"><label>Спільний прогрес між пристроями</label>
+        <p class="muted" style="margin:4px 0 10px">Створіть сімейний код один раз (на будь-якому пристрої) — після цього прогрес дитини й кабінет батьків будуть однаковими на всіх під'єднаних пристроях, оновлення приходять миттєво.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ok" id="createFamily">Створити сімейний код</button></div>
+      </div>
+      <div class="field"><label>Або приєднатися до вже створеного коду (з іншого пристрою)</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="joinCode" placeholder="XXXXX-XXXXX" style="max-width:220px;text-transform:uppercase"><button class="btn sec" id="joinFamily">Приєднатися</button></div>
+      </div>`;
+    return `<div class="card"><h2 style="margin-top:0">Профіль і доступ</h2>
       <div class="field"><label>Ім'я дитини</label><input id="nm" value="${Z.esc(s.name || '')}"></div>
       <div class="field"><label>Новий PIN кабінету батьків (4–8 цифр)</label><input id="pin" inputmode="numeric" placeholder="залишити без змін" autocomplete="off"><small class="muted">PIN зберігається лише як хеш — навіть у коді сторінки немає числа, яке можна побачити.</small></div>
       <div class="field"><label>Повторіть новий PIN</label><input id="pin2" inputmode="numeric" placeholder="залишити без змін" autocomplete="off"></div>
-      <div class="field"><label>Адреса синхронізації (Google Apps Script Web App URL)</label><input id="sync" value="${Z.esc(s.syncUrl || '')}" placeholder="https://script.google.com/macros/s/…/exec"><small class="muted">Інструкція: файл <a href="sync/README.md" target="_blank">sync/README.md</a> у репозиторії (5 хвилин: створити таблицю → вставити скрипт → опублікувати як вебзастосунок → скопіювати адресу сюди). Після цього кожна подія з'являється в таблиці, яку можна відкрити з будь-якого телефона.</small></div>
       <div class="field"><label>Тестова «сьогоднішня» дата (лише для перевірки роботи зошита, формат РРРР-ММ-ДД; порожньо = реальна дата)</label><input id="fake" value="${Z.esc(s.fakeToday || '')}" placeholder="2026-09-14"></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ok" id="save">Зберегти</button><button class="btn sec" id="test" ${s.syncUrl ? '' : 'disabled'}>Надіслати тестову подію</button></div></div>
-      <div class="card" style="border-left:6px solid var(--bad)"><h2 style="margin-top:0">Небезпечна зона</h2><p class="muted">Повне скидання видаляє весь прогрес і журнал на цьому пристрої. Спочатку зробіть експорт.</p><button class="btn danger" id="wipe">Скинути весь прогрес</button></div>`;
+      <button class="btn ok" id="save">Зберегти</button></div>
+      <div class="card"><h2 style="margin-top:0">👨‍👩‍👧 Спільний доступ (сімейний код)</h2>${familyBlock}</div>
+      <div class="card" style="border-left:6px solid var(--bad)"><h2 style="margin-top:0">Небезпечна зона</h2><p class="muted">Повне скидання видаляє весь прогрес і журнал на цьому пристрої (і, якщо підключено сімейний код, на всіх пристроях сім'ї). Спочатку зробіть експорт у вкладці «Звіт».</p><button class="btn danger" id="wipe">Скинути весь прогрес</button></div>`;
   }
 
   /* ---- рендер ---- */
@@ -117,12 +139,10 @@
       upd(); document.getElementById('rep').oninput = upd;
       document.getElementById('exp').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([Z.progress.exportJSON()], { type: 'application/json' })); a.download = `zoshyt-progress-${Z.isoDate(new Date())}.json`; a.click(); };
       document.getElementById('imp').onchange = e => { const f = e.target.files[0]; if (!f) return; f.text().then(t => { try { const n = Z.progress.merge(t); Z.progress.log({ type: 'import', n }); Z.toast(`Імпортовано: оновлено ${n} уроків`, 'ok'); render(); } catch (err) { alert('Не вдалося імпортувати: ' + err.message); } }); };
-      const push = document.getElementById('push'); if (push) push.onclick = async () => { try { await Z.sync.snapshot(); document.getElementById('cloudmsg').textContent = 'Знімок надіслано ' + Z.fmtDT(Date.now()) + '. Перевірте вкладку «Знімок» у таблиці.'; } catch (e) { document.getElementById('cloudmsg').textContent = 'Помилка: ' + e.message; } };
-      const pull = document.getElementById('pull'); if (pull) pull.onclick = async () => { try { const data = await Z.sync.pull(); const n = Z.progress.merge(data); document.getElementById('cloudmsg').textContent = `Завантажено: оновлено ${n} уроків.`; Z.toast('Готово', 'ok'); } catch (e) { document.getElementById('cloudmsg').textContent = 'Помилка: ' + e.message + '. Перевірте, що вебзастосунок опубліковано з доступом «Anyone».'; } };
     }
     if (tab === 'settings') {
       document.getElementById('save').onclick = async () => {
-        const p = { name: document.getElementById('nm').value.trim(), syncUrl: document.getElementById('sync').value.trim(), fakeToday: document.getElementById('fake').value.trim() };
+        const p = { name: document.getElementById('nm').value.trim(), fakeToday: document.getElementById('fake').value.trim() };
         const pin = document.getElementById('pin').value.trim(), pin2 = document.getElementById('pin2').value.trim();
         if (pin || pin2) {
           if (!/^\d{4,8}$/.test(pin)) { alert('PIN — від 4 до 8 цифр'); return; }
@@ -132,10 +152,20 @@
         if (pin) await Z.settings.setPin(pin);
         Z.toast('Збережено', 'ok'); document.getElementById('hdr').innerHTML = Z.header('parent'); render();
       };
-      document.getElementById('test').onclick = async () => { Z.progress.log({ type: 'test', note: 'Тестова подія з кабінету батьків' }); await Z.sync.flush(); Z.toast('Тестову подію надіслано — перевірте таблицю через хвилину'); };
+      const cf = document.getElementById('createFamily'); if (cf) cf.onclick = async () => { cf.disabled = true; try { const code = await Z.sync.createFamily(); Z.toast("Сімейний код створено", 'ok'); render(); } catch (e) { alert('Помилка: ' + e.message); cf.disabled = false; } };
+      const jf = document.getElementById('joinFamily'); if (jf) jf.onclick = async () => {
+        const val = document.getElementById('joinCode').value.trim(); if (!val) return; jf.disabled = true;
+        try { const n = await Z.sync.joinFamily(val); Z.toast(n ? `Приєднано, отримано записів: ${n}` : 'Приєднано', 'ok'); render(); }
+        catch (e) { alert('Не вдалося приєднатися: ' + e.message); jf.disabled = false; }
+      };
+      const lf = document.getElementById('leaveFamily'); if (lf) lf.onclick = () => { if (confirm("Відключити цей пристрій від сім'ї? Дані в хмарі й на інших пристроях не постраждають.")) { Z.sync.leaveFamily(); render(); } };
+      const cpl = document.getElementById('copyParentLink'); if (cpl) cpl.onclick = () => navigator.clipboard.writeText(Z.sync.linkFor('parent.html', Z.settings.get().familyCode)).then(() => Z.toast('Посилання скопійовано', 'ok'));
+      const ccl = document.getElementById('copyChildLink'); if (ccl) ccl.onclick = () => navigator.clipboard.writeText(Z.sync.linkFor('index.html', Z.settings.get().familyCode)).then(() => Z.toast('Посилання скопійовано', 'ok'));
       document.getElementById('wipe').onclick = () => { if (confirm('Точно видалити ВЕСЬ прогрес на цьому пристрої?') && prompt('Введіть слово ВИДАЛИТИ для підтвердження') === 'ВИДАЛИТИ') { Z.progress.reset(); Z.toast('Прогрес скинуто'); render(); } };
     }
   }
   if (Z.qs('hw') === '1') { tab = 'lessons'; onlyHW = true; }
+  window.addEventListener('z4-remote-update', () => { if (tab === 'overview' || tab === 'settings') render(); });
+  window.addEventListener('z4-sync-status', () => { if (tab === 'settings') render(); });
   render();
 })();

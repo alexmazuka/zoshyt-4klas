@@ -1,6 +1,6 @@
 /* Спільний модуль: дані, календар, прогрес, налаштування, синхронізація, шапка */
 window.Z = (function () {
-  const LS_PROGRESS = 'z4.progress', LS_SETTINGS = 'z4.settings', LS_SYNCQ = 'z4.syncq';
+  const LS_PROGRESS = 'z4.progress', LS_SETTINGS = 'z4.settings';
   const state = { cal: null, subjects: null, subjMap: {}, timetable: null, plan: null, byId: {}, bySubject: {}, byWeek: {} };
   const DAYS = ['', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота', 'Неділя'];
   const DAYS_SHORT = ['', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
@@ -45,7 +45,7 @@ window.Z = (function () {
       if (!this._d) { try { this._d = JSON.parse(localStorage.getItem(LS_PROGRESS)) || {}; } catch (e) { this._d = {}; } }
       this._d.lessons ||= {}; this._d.log ||= []; return this._d;
     },
-    save() { localStorage.setItem(LS_PROGRESS, JSON.stringify(this.load())); },
+    save() { localStorage.setItem(LS_PROGRESS, JSON.stringify(this.load())); sync.pushDebounced(); },
     get(id) { return this.load().lessons[id] || null; },
     ensure(id) {
       const d = this.load();
@@ -54,7 +54,7 @@ window.Z = (function () {
     },
     set(id, rec) { rec.last = Date.now(); this.load().lessons[id] = rec; this.save(); },
     remove(id) { delete this.load().lessons[id]; this.save(); },
-    log(ev) { const d = this.load(); ev.t = Date.now(); d.log.push(ev); if (d.log.length > 3000) d.log.splice(0, d.log.length - 3000); this.save(); sync.queue(ev); },
+    log(ev) { const d = this.load(); ev.t = Date.now(); d.log.push(ev); if (d.log.length > 3000) d.log.splice(0, d.log.length - 3000); this.save(); },
     exportJSON() { return JSON.stringify({ version: 1, app: 'zoshyt-4klas', exported: new Date().toISOString(), settings: { name: settings.get().name || '' }, progress: this.load() }); },
     importJSON(json) { const o = JSON.parse(json); if (!o.progress || typeof o.progress.lessons !== 'object') throw new Error('Це не файл прогресу зошита'); this._d = o.progress; this.save(); if (o.settings && o.settings.name) settings.patch({ name: o.settings.name }); },
     merge(json) { // об'єднати: беремо запис з пізнішим last
@@ -63,7 +63,7 @@ window.Z = (function () {
       const seen = new Set(d.log.map(e => e.t + e.type + (e.id || ''))); (o.progress.log || []).forEach(e => { const k = e.t + e.type + (e.id || ''); if (!seen.has(k)) { d.log.push(e); seen.add(k); } });
       d.log.sort((a, b) => a.t - b.t); this.save(); return n;
     },
-    reset() { this._d = { lessons: {}, log: [] }; this.save(); localStorage.removeItem(LS_SYNCQ); }
+    reset() { this._d = { lessons: {}, log: [] }; this.save(); }
   };
 
   const PASS = 70;
@@ -147,31 +147,84 @@ window.Z = (function () {
     async setPin(newPin) { this.patch({ pinHash: await sha256Hex(newPin) }); }
   };
 
-  /* ---------- синхронізація з Google Таблицею (необов'язково) ---------- */
+  /* ---------- синхронізація через Firebase: спільний «код сім'ї» для дитини й батьків ----------
+   * Один документ Firestore families/{familyCode} містить весь прогрес (як JSON-рядок, той самий
+   * формат, що й progress.exportJSON()). Кожен пристрій, підключений тим самим кодом, слухає
+   * зміни в реальному часі (onSnapshot) і надсилає власні зміни з невеликою затримкою (debounce).
+   * js/firebase-init.js (модуль, підключається окремим <script type="module">) ініціалізує Firebase
+   * і кладе { doc, getDoc, setDoc, onSnapshot, serverTimestamp, db } у window.__fb, а після цього
+   * генерує подію 'z4-fb-ready' — fbReady() чекає на неї, якщо скрипт ще не встиг завантажитися. */
+  function fbReady() { return new Promise(res => { if (window.__fb) res(window.__fb); else window.addEventListener('z4-fb-ready', () => res(window.__fb), { once: true }); }); }
+  function randomFamilyCode() {
+    const abc = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // без 0/O/1/I/L, щоб не плутати на слух і на письмі
+    let s = ''; for (let i = 0; i < 10; i++) s += abc[Math.floor(Math.random() * abc.length)];
+    return s.match(/.{1,5}/g).join('-'); // XXXXX-XXXXX — легше продиктувати й ввести
+  }
   const sync = {
-    _q() { try { return JSON.parse(localStorage.getItem(LS_SYNCQ)) || []; } catch (e) { return []; } },
-    enabled() { return !!settings.get().syncUrl; },
-    queue(ev) {
-      if (!this.enabled()) return;
-      const l = ev.id ? state.byId[ev.id] : null; const s = settings.get();
-      const q = this._q(); q.push(Object.assign({ child: s.name || '', title: l ? l.title : '', subject: l ? (state.subjMap[l.subject] || {}).name : '', week: l ? l.week : '' }, ev));
-      localStorage.setItem(LS_SYNCQ, JSON.stringify(q)); this.flush();
+    _unsub: null, _status: 'off', _pushTimer: null,
+    code() { return settings.get().familyCode || ''; },
+    enabled() { return !!this.code(); },
+    status() { return this._status; },
+    _setStatus(s) { this._status = s; window.dispatchEvent(new CustomEvent('z4-sync-status', { detail: s })); },
+    /** Створити нову сім'ю: згенерувати код, одразу залити туди поточний локальний прогрес. */
+    async createFamily() {
+      const code = randomFamilyCode(); settings.patch({ familyCode: code });
+      await this._push(); this._listen(); return code;
     },
-    async flush() {
-      if (!this.enabled() || this._busy) return; const q = this._q(); if (!q.length) return; this._busy = true;
-      try { await fetch(settings.get().syncUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: 'events', events: q }) }); localStorage.setItem(LS_SYNCQ, '[]'); settings.patch({ lastSync: Date.now() }); }
-      catch (e) { console.warn('sync', e); } finally { this._busy = false; }
+    /** Приєднати цей пристрій до вже існуючої сім'ї за кодом з іншого пристрою. */
+    async joinFamily(rawCode) {
+      const code = String(rawCode || '').trim().toUpperCase().replace(/\s+/g, '');
+      if (code.length < 6) throw new Error('Код закороткий');
+      settings.patch({ familyCode: code });
+      this._listen();
+      return this._pull();
     },
-    async snapshot() {
-      const s = settings.get(); if (!s.syncUrl) throw new Error('Не вказано адресу синхронізації');
-      await fetch(s.syncUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: 'snapshot', child: s.name || '', data: progress.exportJSON() }) });
-      settings.patch({ lastSnapshot: Date.now() });
+    /** Відключити цей пристрій від сім'ї (дані в хмарі й на інших пристроях не чіпає). */
+    leaveFamily() { if (this._unsub) { this._unsub(); this._unsub = null; } settings.patch({ familyCode: '' }); this._setStatus('off'); },
+    async _listen() {
+      if (!this.enabled()) return; if (this._unsub) { this._unsub(); this._unsub = null; }
+      this._setStatus('connecting');
+      const fb = await fbReady(); if (!this.enabled()) return; // могли встигнути відключитися, поки чекали
+      const ref = fb.doc(fb.db, 'families', this.code());
+      this._unsub = fb.onSnapshot(ref, snap => {
+        this._setStatus('on'); settings.patch({ lastSync: Date.now() });
+        const data = snap.data();
+        if (data && data.progressJson) { const n = progress.merge(data.progressJson); if (n) window.dispatchEvent(new CustomEvent('z4-remote-update', { detail: { n } })); }
+      }, err => { console.warn('z4 sync', err); this._setStatus('error'); });
     },
-    async pull() {
-      const s = settings.get(); if (!s.syncUrl) throw new Error('Не вказано адресу синхронізації');
-      const r = await fetch(s.syncUrl + (s.syncUrl.includes('?') ? '&' : '?') + 'action=snapshot'); const j = await r.json(); if (!j || !j.data) throw new Error('У хмарі ще немає знімка прогресу'); return j.data;
-    }
+    async _pull() {
+      const fb = await fbReady(); const ref = fb.doc(fb.db, 'families', this.code());
+      const snap = await fb.getDoc(ref); const data = snap.data();
+      return data && data.progressJson ? progress.merge(data.progressJson) : 0;
+    },
+    async _push() {
+      if (!this.enabled()) return; const fb = await fbReady(); if (!this.enabled()) return;
+      const ref = fb.doc(fb.db, 'families', this.code());
+      try { await fb.setDoc(ref, { progressJson: progress.exportJSON(), updatedBy: settings.get().name || '', updatedAt: fb.serverTimestamp() }); settings.patch({ lastPush: Date.now() }); this._setStatus('on'); }
+      catch (e) { console.warn('z4 push', e); this._setStatus('error'); }
+    },
+    pushDebounced() { if (!this.enabled()) return; clearTimeout(this._pushTimer); this._pushTimer = setTimeout(() => this._push(), 1500); },
+    /** Викликається один раз при завантаженні сторінки: якщо код сім'ї вже збережено локально — одразу підключитися. */
+    autoStart() { if (this.enabled()) this._listen(); },
+    /** Посилання, яке миттєво підключає пристрій до сім'ї без ручного введення коду.
+     * base — 'index.html' (пристрій дитини) або 'parent.html' (інший пристрій батьків). */
+    linkFor(base, code) { return location.origin + location.pathname.replace(/[^/]*$/, base) + '?fam=' + encodeURIComponent(code); }
   };
+
+  /* ---------- підключення до сім'ї за посиланням ?fam=КОД (без ручного введення коду) ---------- */
+  function applyFamilyLinkFromURL() {
+    const raw = new URLSearchParams(location.search).get('fam');
+    if (!raw) return;
+    const code = raw.trim().toUpperCase();
+    const clean = () => { const u = new URL(location.href); u.searchParams.delete('fam'); history.replaceState(null, '', u.pathname + u.search + u.hash); };
+    if (!/^[A-Z0-9-]{6,}$/.test(code)) { clean(); return; }
+    const already = settings.get().familyCode === code;
+    const ok = already || confirm("Підключити цей пристрій до сімейного обліку прогресу?\n\nКод: " + code + "\n\nПрогрес дитини й кабінет батьків стануть спільними з іншими пристроями цієї сім'ї.");
+    clean();
+    if (!ok) return;
+    sync.joinFamily(code).then(n => toast(n ? `Підключено, отримано записів: ${n}` : "Підключено до сім'ї", 'ok'))
+      .catch(e => toast('Не вдалося підключитися: ' + e.message, 'bad'));
+  }
 
   /* ---------- утиліти ---------- */
   function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -213,7 +266,8 @@ window.Z = (function () {
   }
   function toast(msg, cls) { const t = document.createElement('div'); t.textContent = msg; t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2937;color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;z-index:99;box-shadow:0 6px 20px rgba(0,0,0,.2)'; if (cls === 'bad') t.style.background = '#dc2626'; if (cls === 'ok') t.style.background = '#16a34a'; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
 
-  window.addEventListener('load', () => { try { sync.flush(); } catch (e) { } });
+  try { applyFamilyLinkFromURL(); } catch (e) { console.warn('family link', e); }
+  try { sync.autoStart(); } catch (e) { console.warn('sync autostart', e); }
 
   return { state, DAYS, DAYS_SHORT, init, loadJSON, parseDate, isoDate, fmt, weekInfo, dateOf, today, slotOf, schoolDays, currentWeek, holidayOn, nextSchoolDay, quarterOf, lessonsOn,
     progress, PASS, statusOf, statusIcon, statusName, starsOf, starsHTML, hwStatus, hwStatusName, summary, overdue, xp, level, streak, badges, settings, sync,
