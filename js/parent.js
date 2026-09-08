@@ -6,11 +6,10 @@
   const lessonCache = {};
   async function lesson(id) { if (!lessonCache[id]) { try { lessonCache[id] = await Z.loadJSON(Z.state.byId[id].file); } catch (e) { lessonCache[id] = null; } } return lessonCache[id]; }
 
-  /* ---- PIN ---- */
+  /* ---- PIN (перевіряється як SHA-256 хеш, сам PIN ніде на сторінці не зберігається і не показується) ---- */
   if (sessionStorage.getItem('z4.parent') !== '1') {
-    const isDefault = !Z.settings.get().pin;
-    root.innerHTML = `<div class="card" style="max-width:460px;margin:40px auto"><h1>👨‍👩‍👦 Кабінет батьків</h1><p class="muted">Тут видно, як дитина виконує уроки й домашні завдання. Введіть PIN.</p>${isDefault ? '<p class="notice">Стандартний PIN — <b>2026</b>. Змініть його в налаштуваннях кабінету.</p>' : ''}<div class="field"><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off"></div><button class="btn" id="go">Увійти</button> <span id="err" class="pill-bad"></span></div>`;
-    const tryPin = () => { if (document.getElementById('pin').value === Z.settings.pin()) { sessionStorage.setItem('z4.parent', '1'); location.reload(); } else document.getElementById('err').textContent = 'Невірний PIN'; };
+    root.innerHTML = `<div class="card" style="max-width:460px;margin:40px auto"><h1>👨‍👩‍👦 Кабінет батьків</h1><p class="muted">Тут видно, як дитина виконує уроки й домашні завдання. Це розділ лише для дорослих — введіть PIN, який вам повідомили окремо.</p><div class="field"><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off"></div><button class="btn" id="go">Увійти</button> <span id="err" class="pill-bad"></span></div>`;
+    const tryPin = async () => { const btn = document.getElementById('go'); btn.disabled = true; const ok = await Z.settings.checkPin(document.getElementById('pin').value); btn.disabled = false; if (ok) { sessionStorage.setItem('z4.parent', '1'); location.reload(); } else { document.getElementById('err').textContent = 'Невірний PIN'; document.getElementById('pin').value = ''; document.getElementById('pin').focus(); } };
     document.getElementById('go').onclick = tryPin; document.getElementById('pin').onkeydown = e => { if (e.key === 'Enter') tryPin(); }; document.getElementById('pin').focus();
     return;
   }
@@ -93,7 +92,8 @@
     const s = Z.settings.get();
     return `<div class="card"><h2 style="margin-top:0">Налаштування</h2>
       <div class="field"><label>Ім'я дитини</label><input id="nm" value="${Z.esc(s.name || '')}"></div>
-      <div class="field"><label>Новий PIN кабінету батьків (4–8 цифр)</label><input id="pin" inputmode="numeric" placeholder="залишити без змін" autocomplete="off"></div>
+      <div class="field"><label>Новий PIN кабінету батьків (4–8 цифр)</label><input id="pin" inputmode="numeric" placeholder="залишити без змін" autocomplete="off"><small class="muted">PIN зберігається лише як хеш — навіть у коді сторінки немає числа, яке можна побачити.</small></div>
+      <div class="field"><label>Повторіть новий PIN</label><input id="pin2" inputmode="numeric" placeholder="залишити без змін" autocomplete="off"></div>
       <div class="field"><label>Адреса синхронізації (Google Apps Script Web App URL)</label><input id="sync" value="${Z.esc(s.syncUrl || '')}" placeholder="https://script.google.com/macros/s/…/exec"><small class="muted">Інструкція: файл <a href="sync/README.md" target="_blank">sync/README.md</a> у репозиторії (5 хвилин: створити таблицю → вставити скрипт → опублікувати як вебзастосунок → скопіювати адресу сюди). Після цього кожна подія з'являється в таблиці, яку можна відкрити з будь-якого телефона.</small></div>
       <div class="field"><label>Тестова «сьогоднішня» дата (лише для перевірки роботи зошита, формат РРРР-ММ-ДД; порожньо = реальна дата)</label><input id="fake" value="${Z.esc(s.fakeToday || '')}" placeholder="2026-09-14"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ok" id="save">Зберегти</button><button class="btn sec" id="test" ${s.syncUrl ? '' : 'disabled'}>Надіслати тестову подію</button></div></div>
@@ -121,7 +121,17 @@
       const pull = document.getElementById('pull'); if (pull) pull.onclick = async () => { try { const data = await Z.sync.pull(); const n = Z.progress.merge(data); document.getElementById('cloudmsg').textContent = `Завантажено: оновлено ${n} уроків.`; Z.toast('Готово', 'ok'); } catch (e) { document.getElementById('cloudmsg').textContent = 'Помилка: ' + e.message + '. Перевірте, що вебзастосунок опубліковано з доступом «Anyone».'; } };
     }
     if (tab === 'settings') {
-      document.getElementById('save').onclick = () => { const p = { name: document.getElementById('nm').value.trim(), syncUrl: document.getElementById('sync').value.trim(), fakeToday: document.getElementById('fake').value.trim() }; const pin = document.getElementById('pin').value.trim(); if (pin) { if (!/^\d{4,8}$/.test(pin)) { alert('PIN — від 4 до 8 цифр'); return; } p.pin = pin; } Z.settings.patch(p); Z.toast('Збережено', 'ok'); document.getElementById('hdr').innerHTML = Z.header('parent'); render(); };
+      document.getElementById('save').onclick = async () => {
+        const p = { name: document.getElementById('nm').value.trim(), syncUrl: document.getElementById('sync').value.trim(), fakeToday: document.getElementById('fake').value.trim() };
+        const pin = document.getElementById('pin').value.trim(), pin2 = document.getElementById('pin2').value.trim();
+        if (pin || pin2) {
+          if (!/^\d{4,8}$/.test(pin)) { alert('PIN — від 4 до 8 цифр'); return; }
+          if (pin !== pin2) { alert('PIN і повторення PIN не збігаються'); return; }
+        }
+        Z.settings.patch(p);
+        if (pin) await Z.settings.setPin(pin);
+        Z.toast('Збережено', 'ok'); document.getElementById('hdr').innerHTML = Z.header('parent'); render();
+      };
       document.getElementById('test').onclick = async () => { Z.progress.log({ type: 'test', note: 'Тестова подія з кабінету батьків' }); await Z.sync.flush(); Z.toast('Тестову подію надіслано — перевірте таблицю через хвилину'); };
       document.getElementById('wipe').onclick = () => { if (confirm('Точно видалити ВЕСЬ прогрес на цьому пристрої?') && prompt('Введіть слово ВИДАЛИТИ для підтвердження') === 'ВИДАЛИТИ') { Z.progress.reset(); Z.toast('Прогрес скинуто'); render(); } };
     }

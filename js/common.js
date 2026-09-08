@@ -130,11 +130,21 @@ window.Z = (function () {
   }
 
   /* ---------- налаштування ---------- */
+  // PIN кабінету батьків ніколи не зберігається і не показується у відкритому вигляді —
+  // лише SHA-256 хеш. DEFAULT_PIN_HASH — хеш початкового PIN, який повідомляють батькам окремо
+  // (поза інтерфейсом сайту), щоб дитина його не побачила на екрані чи у видимому тексті сторінки.
+  const DEFAULT_PIN_HASH = '7aac829dc4ec6caee619901087749dea68c06a2c825aad735bcc75aac19befe6';
+  async function sha256Hex(s) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(s)));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
   const settings = {
     get() { try { return JSON.parse(localStorage.getItem(LS_SETTINGS)) || {}; } catch (e) { return {}; } },
     set(s) { localStorage.setItem(LS_SETTINGS, JSON.stringify(s)); },
     patch(p) { this.set(Object.assign(this.get(), p)); },
-    pin() { return this.get().pin || '2026'; }
+    pinHash() { return this.get().pinHash || DEFAULT_PIN_HASH; },
+    async checkPin(entered) { return (await sha256Hex(entered)) === this.pinHash(); },
+    async setPin(newPin) { this.patch({ pinHash: await sha256Hex(newPin) }); }
   };
 
   /* ---------- синхронізація з Google Таблицею (необов'язково) ---------- */
