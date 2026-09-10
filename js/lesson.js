@@ -11,6 +11,7 @@
   }
   const S = Z.state.subjMap[meta.subject];
   document.title = L.title + ' — ' + S.name;
+  if (window.AiHelp) window.AiHelp.mount();
   const rec = Z.progress.ensure(id); Z.progress.save();
   const seed = Z.hash(id);
   const wasNew = !rec.theory && !rec.practice.done;
@@ -164,11 +165,36 @@
       <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">${prev ? `<a class="btn ghost" href="${Z.lessonURL(prev.id)}">◀ ${Z.esc(Z.state.subjMap[prev.subject].short)}</a>` : ''}<a class="btn sec" href="week.html?w=${meta.week}">До розкладу тижня</a>${next ? `<a class="btn" href="${Z.lessonURL(next.id)}">Наступний урок: ${Z.esc(Z.state.subjMap[next.subject].short)} ▶</a>` : '<a class="btn" href="index.html">На головну</a>'}</p></div>`;
   }
 
+  /* ---------- контекст для ШІ-помічника «Поясняйко» (js/ai-help.js) ---------- */
+  function theoryPlain() {
+    return (L.theory || []).map(b => {
+      switch (b.type) {
+        case 'p': case 'rule': case 'tip': case 'example': return (b.title ? b.title + ': ' : '') + b.text;
+        case 'list': case 'steps': return (b.title ? b.title + ': ' : '') + (b.items || []).join('; ');
+        case 'table': return (b.title ? b.title + ': ' : '') + (b.head || []).join(' | ') + '\n' + (b.rows || []).map(r => r.join(' | ')).join('\n');
+        case 'reading': return (b.title || '') + '\n' + b.text;
+        case 'vocab': return (b.items || []).map(i => `${i.en} — ${i.uk}`).join('; ');
+        case 'dialogue': return (b.lines || []).map(l => `${l.who}: ${l.text}`).join('\n');
+        case 'image': return b.caption || '';
+        default: return '';
+      }
+    }).filter(Boolean).join('\n').slice(0, 4000);
+  }
+  function exQuestions(list) { return (list || []).map(ex => ex.q || (ex.type === 'truefalse' ? (ex.items || []).map(it => it.text).join('; ') : '')).filter(Boolean); }
+  function aiContext() {
+    return {
+      subject: S.name, title: L.title, step,
+      theory: (step === 'theory' || step === 'summary') ? theoryPlain() : '',
+      questions: step === 'practice' ? exQuestions(L.exercises) : step === 'homework' ? exQuestions(L.homework) : [],
+    };
+  }
+
   /* ---------- маршрутизація кроків ---------- */
   function go(s) { step = s; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   function render() {
     let body = step === 'theory' ? theoryView() : step === 'practice' ? exercisesView('practice') : step === 'homework' ? exercisesView('homework') : summaryView();
     root.innerHTML = head() + body;
+    if (window.AiHelp) window.AiHelp.setContext(aiContext());
     root.querySelectorAll('button[data-step]').forEach(b => b.onclick = () => go(b.dataset.step));
     root.querySelectorAll('button[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
     const td = document.getElementById('theoryDone'); if (td) td.onclick = () => { if (!rec.theory) { rec.theory = Date.now(); Z.progress.set(id, rec); } go('practice'); };
