@@ -5,8 +5,6 @@
    Контекст (який урок, який крок, які запитання вправ — без відповідей) оновлює lesson.js
    через AiHelp.setContext(), щоб Поясняйко завжди «знав», де зараз дитина, без пояснень з її боку. */
 window.AiHelp = (function () {
-  const OR_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
-  const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
   const NAME = 'Поясняйко';
   const MAX_TURNS = 6;   // скільки попередніх реплік (учень+Поясняйко) тримати як контекст розмови
   const MAX_ASKED = 25;  // ліміт запитань за одне відвідування сторінки — від випадкового зациклення
@@ -35,68 +33,28 @@ window.AiHelp = (function () {
     return L.join('\n');
   }
 
-  function fetchJSON(url, opts) {
-    // безкоштовні моделі бувають повільні (деякі — "reasoning", спершу довго міркують) — даємо запас
-    const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 45000);
-    return fetch(url, Object.assign({ signal: ctrl.signal }, opts)).finally(() => clearTimeout(to));
-  }
-  async function httpError(res) {
-    let msg = '';
-    try { const j = await res.json(); msg = j.error && j.error.message; } catch (e) { /* ignore */ }
-    const err = new Error(msg || ('HTTP ' + res.status)); err.status = res.status; return err;
-  }
-
-  /* ---- OpenRouter (основний провайдер): стандартний чат-формат OpenAI ---- */
-  async function askOpenRouter(text) {
-    const or = (window.Z4_AI || {}).openrouter || {};
-    if (!or.apiKey) throw new Error('no-openrouter-key');
-    const messages = [{ role: 'system', content: sysPrompt() }]
-      .concat(history.slice(-MAX_TURNS * 2).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })))
-      .concat([{ role: 'user', content: text }]);
-    const res = await fetchJSON(OR_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + or.apiKey, 'X-Title': 'Zoshyt 4klas' },
-      body: JSON.stringify({ model: or.model || 'openrouter/free', messages }),
-    });
-    if (!res.ok) throw await httpError(res);
-    const data = await res.json();
-    const t = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
-    if (!t) throw new Error('empty');
-    return t;
-  }
-
-  /* ---- Gemini (резерв, якщо OpenRouter недоступний): Interactions API ---- */
-  function buildGeminiInput(text) {
-    const turns = history.slice(-MAX_TURNS * 2);
-    const input = turns.map(m => ({ type: m.role === 'user' ? 'user_input' : 'model_response', content: [{ type: 'text', text: m.text }] }));
-    input.push({ type: 'user_input', content: [{ type: 'text', text }] });
-    return input;
-  }
-  function extractGeminiText(data) {
-    if (data.output_text) return data.output_text;
-    if (Array.isArray(data.steps)) {
-      const last = [...data.steps].reverse().find(s => s.type === 'model_response');
-      const t = last && Array.isArray(last.content) ? last.content.filter(c => c.type === 'text').map(c => c.text).join('\n') : '';
-      if (t) return t;
-    }
-    throw new Error('empty');
-  }
-  async function askGemini(text) {
-    const g = (window.Z4_AI || {}).gemini || {};
-    if (!g.apiKey) throw new Error('no-gemini-key');
-    const res = await fetchJSON(GEMINI_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': g.apiKey },
-      body: JSON.stringify({ model: g.model || 'gemini-3.1-flash-lite', system_instruction: sysPrompt(), input: buildGeminiInput(text) }),
-    });
-    if (!res.ok) throw await httpError(res);
-    return extractGeminiText(await res.json());
-  }
-
-  /* ---- пробуємо OpenRouter, при будь-якій помилці — Gemini ---- */
+  /* Ключі провайдерів живуть лише на сервері-проксі (Cloudflare Worker, sync/ai-help.md) —
+     сюди, у публічний код сайту, жоден секрет не потрапляє. Проксі сам пробує OpenRouter,
+     а якщо не вийшло — Gemini, і повертає лише {text} або {error}. */
   async function ask(text) {
-    try { return await askOpenRouter(text); }
-    catch (e) { return await askGemini(text); }
+    const proxyUrl = (window.Z4_AI || {}).proxyUrl;
+    if (!proxyUrl) throw new Error('no-proxy-url');
+    const messages = history.slice(-MAX_TURNS * 2)
+      .map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }))
+      .concat([{ role: 'user', content: text }]);
+    const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 45000);
+    let res;
+    try {
+      res = await fetch(proxyUrl, {
+        method: 'POST', signal: ctrl.signal,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ system: sysPrompt(), messages }),
+      });
+    } finally { clearTimeout(to); }
+    let data = {};
+    try { data = await res.json(); } catch (e) { /* ignore */ }
+    if (!res.ok || !data.text) { const err = new Error(data.error || ('HTTP ' + res.status)); err.status = res.status; throw err; }
+    return data.text;
   }
 
   /* ---------- інтерфейс ---------- */
