@@ -90,6 +90,7 @@ window.AiHelp = (function () {
       const answer = await ask(text);
       history.push({ role: 'ai', text: answer });
       bubble('ai', Z.md(answer));
+      Z.progress.log({ type: 'ai_ask', id: ctx && ctx.id, step: ctx && ctx.step, q: text, a: answer });
     } catch (e) {
       const friendly = e && e.status === 429
         ? `${NAME} зараз перевантажений — стільки хочуть учитися! Спробуй ще раз за хвилинку 🙂`
@@ -102,7 +103,7 @@ window.AiHelp = (function () {
   function autoSize() { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(80, inputEl.scrollHeight) + 'px'; sendBtn.disabled = busy || !inputEl.value.trim(); }
   function openPanel(v) {
     opened = v; panel.hidden = !v; toggleBtn.setAttribute('aria-expanded', String(v));
-    if (v) { greet(); inputEl.focus(); }
+    if (v) { greet(); inputEl.focus(); Z.progress.log({ type: 'ai_open', id: ctx && ctx.id, step: ctx && ctx.step }); }
   }
 
   function mount() {

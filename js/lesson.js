@@ -183,7 +183,7 @@
   function exQuestions(list) { return (list || []).map(ex => ex.q || (ex.type === 'truefalse' ? (ex.items || []).map(it => it.text).join('; ') : '')).filter(Boolean); }
   function aiContext() {
     return {
-      subject: S.name, title: L.title, step,
+      id, subject: S.name, title: L.title, step,
       theory: (step === 'theory' || step === 'summary') ? theoryPlain() : '',
       questions: step === 'practice' ? exQuestions(L.exercises) : step === 'homework' ? exQuestions(L.homework) : [],
     };
