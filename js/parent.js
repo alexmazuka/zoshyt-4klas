@@ -15,7 +15,7 @@
   }
 
   const TABS = [['overview', 'Огляд'], ['lessons', 'Уроки і домашні'], ['journal', 'Журнал'], ['report', 'Звіт і резервна копія'], ['settings', 'Налаштування']];
-  let tab = Z.qs('tab') || 'overview'; let week = Number(Z.qs('w')) || Z.currentWeek(); let onlyHW = false; let openId = Z.qs('id') || null;
+  let tab = Z.qs('tab') || 'overview'; let week = Number(Z.qs('w')) || Z.currentWeek(); let onlyHW = false; let openId = Z.qs('id') || null; let flash = null;
   function tabsHTML() { return `<div class="tabs">${TABS.map(([k, n]) => `<button data-tab="${k}" class="${tab === k ? 'on' : ''}">${n}</button>`).join('')}<button class="btn sm ghost" id="exit" style="margin-left:auto">Вийти з кабінету</button></div>`; }
 
   /* ---- Огляд ---- */
@@ -41,6 +41,19 @@
       <h2>${onlyHW ? 'Домашні завдання, що чекають перевірки' : `Тиждень ${week}: ${Z.fmt(Z.dateOf(week, wi.days[0]))} – ${Z.fmt(Z.dateOf(week, wi.days[wi.days.length - 1]))}`}</h2>
       <div class="table-wrap"><table><thead><tr><th>День</th><th>Предмет</th><th>Урок</th><th>Статус</th><th>Практика</th><th>Домашнє</th><th>Час / активність</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="8" class="muted">Немає уроків</td></tr>'}</tbody></table></div></div><div id="detail"></div>`;
   }
+  /* повернення на доопрацювання: що саме повернути; попередня спроба зберігається для батьків */
+  const PARTS = [['theory', '📖 Теорію — прочитати ще раз'], ['practice', '✏️ Практику — виконати заново'], ['homework', '🏠 Домашнє — зробити заново']];
+  const PART_SHORT = { theory: 'теорія', practice: 'практика', homework: 'домашнє' };
+  function partsHTML(rv) { const redo = rv && rv.status === 'redo'; const cur = redo ? (rv.parts || ['homework']) : null; return `<div class="field rv-parts" ${redo ? '' : 'hidden'}><b>Що повернути:</b>${PARTS.map(([k, n]) => `<label><input type="checkbox" name="rvp" value="${k}" ${!cur || cur.includes(k) ? 'checked' : ''}> ${n}</label>`).join('')}</div>`; }
+  function returnLesson(r, parts, comment) {
+    const snap = { at: Date.now(), comment, parts };
+    if (parts.includes('practice')) snap.practice = { answers: r.practice.answers, results: r.practice.results, score: r.practice.score };
+    if (parts.includes('homework')) snap.homework = { answers: r.homework.answers, results: r.homework.results, score: r.homework.score, submitted: r.homework.submitted };
+    r.returned = (r.returned || []).concat([snap]).slice(-5);
+    if (parts.includes('theory')) r.theory = null;
+    if (parts.includes('practice')) Object.assign(r.practice, { answers: {}, results: {}, score: null, done: null });
+    if (parts.includes('homework')) Object.assign(r.homework, { answers: {}, results: {}, score: null, submitted: null });
+  }
   async function detail(id) {
     const box = document.getElementById('detail'); const meta = Z.state.byId[id]; const r = Z.progress.get(id); const L = await lesson(id);
     if (!L) { box.innerHTML = '<div class="card">Файл уроку недоступний.</div>'; return; }
@@ -57,11 +70,18 @@
       ${!r ? '<p class="muted">Дитина ще не відкривала цей урок.</p>' : `<p class="muted">Відкрито: ${Z.fmtDT(r.opened)} · теорію прочитано: ${r.theory ? Z.fmtDT(r.theory) : 'ні'} · час: ${Z.fmtTime(r.time)}</p>
       <h3>Практика ${r.practice.done ? `— ${r.practice.score}% (найкращий ${r.practice.best}%, спроб ${r.practice.attempts}), завершено ${Z.fmtDT(r.practice.done)}` : '— не завершено'}</h3>${block('practice', L.exercises, r.practice)}
       <h3>Домашнє завдання — ${Z.hwStatusName(Z.hwStatus(r))}${r.homework.submitted ? ', здано ' + Z.fmtDT(r.homework.submitted) : ''}</h3>${block('homework', L.homework, r.homework)}
-      ${r.homework.submitted || rv ? `<div class="card" style="background:#f9fafb"><h3 style="margin-top:0">Перевірка батьків</h3>${rv ? `<p class="muted">Поточна оцінка: <b>${rv.status === 'ok' ? 'прийнято' : 'повернуто'}</b> ${Z.fmtDT(rv.at)}${rv.comment ? ' — ' + Z.esc(rv.comment) : ''}</p>` : ''}<div class="field"><label><input type="radio" name="rv" value="ok" ${!rv || rv.status === 'ok' ? 'checked' : ''}> ✅ Прийнято</label><label><input type="radio" name="rv" value="redo" ${rv && rv.status === 'redo' ? 'checked' : ''}> ↩️ Повернути на доопрацювання (дитина зможе переробити)</label></div><div class="field"><label>Коментар для дитини</label><textarea id="rvc" style="min-height:70px">${Z.esc(rv ? rv.comment || '' : '')}</textarea></div><button class="btn ok" id="saveRv">Зберегти перевірку</button></div>` : ''}
+      ${r.homework.submitted || rv ? `<div class="card" style="background:#f9fafb"><h3 style="margin-top:0">Перевірка батьків</h3>${rv ? `<p class="muted">Поточна оцінка: <b>${rv.status === 'ok' ? 'прийнято' : 'повернуто'}</b> ${Z.fmtDT(rv.at)}${rv.comment ? ' — ' + Z.esc(rv.comment) : ''}</p>` : ''}<div class="field"><label><input type="radio" name="rv" value="ok" ${!rv || rv.status === 'ok' ? 'checked' : ''}> ✅ Прийнято</label><label><input type="radio" name="rv" value="redo" ${rv && rv.status === 'redo' ? 'checked' : ''}> ↩️ Повернути на доопрацювання (дитина зможе переробити)</label></div>${partsHTML(rv)}<div class="field"><label>Коментар для дитини</label><textarea id="rvc" style="min-height:70px">${Z.esc(rv ? rv.comment || '' : '')}</textarea></div><button class="btn ok" id="saveRv">Зберегти перевірку</button></div>` : ''}
+      ${(r && r.returned || []).length ? `<details class="prev"><summary>Попередні спроби (${r.returned.length})</summary>${r.returned.slice().reverse().map(s => `<div class="prev-item"><p class="muted">Повернуто ${Z.fmtDT(s.at)}: ${(s.parts || ['homework']).map(p => PART_SHORT[p]).join(', ')}${s.comment ? ' — «' + Z.esc(s.comment) + '»' : ''}</p>${s.practice ? `<h4>Практика${s.practice.score != null ? ' — ' + s.practice.score + '%' : ''}</h4>${block('practice', L.exercises, s.practice)}` : ''}${s.homework ? `<h4>Домашнє</h4>${block('homework', L.homework, s.homework)}` : ''}</div>`).join('')}</details>` : ''}
       ${aiBlock}
       ${r.reflection ? `<h3>Рефлексія</h3>${Object.entries(r.reflection).map(([i, v]) => `<div class="child">${Z.esc((L.reflection || [])[i] || '')}<br><b>${Z.esc(v)}</b></div>`).join('')}` : ''}`}</div>`;
     box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const sv = document.getElementById('saveRv'); if (sv) sv.onclick = () => { const status = box.querySelector('input[name=rv]:checked').value; const comment = document.getElementById('rvc').value.trim(); r.homework.review = { status, comment, at: Date.now() }; if (status === 'redo') { r.homework.submitted = null; r.homework.results = {}; } Z.progress.set(id, r); Z.progress.log({ type: 'review', id, status, comment }); Z.toast('Перевірку збережено', 'ok'); render(); detail(id); };
+    box.querySelectorAll('input[name=rv]').forEach(i => i.onchange = () => { const p = box.querySelector('.rv-parts'); if (p) p.hidden = box.querySelector('input[name=rv]:checked').value !== 'redo'; });
+    const sv = document.getElementById('saveRv'); if (sv) sv.onclick = () => { const status = box.querySelector('input[name=rv]:checked').value; const comment = document.getElementById('rvc').value.trim(); const parts = status === 'redo' ? [...box.querySelectorAll('input[name=rvp]:checked')].map(i => i.value) : [];
+      if (status === 'redo' && !parts.length) { Z.toast('Позначте, що саме повернути: теорію, практику чи домашнє', 'bad'); return; }
+      if (status === 'redo') returnLesson(r, parts, comment);
+      r.homework.review = status === 'redo' ? { status, comment, at: Date.now(), parts } : { status, comment, at: Date.now() }; Z.progress.set(id, r); Z.progress.log({ type: 'review', id, status, comment, parts }); openId = null; const u = new URL(location.href); if (u.searchParams.has('id')) { u.searchParams.delete('id'); history.replaceState(null, '', u.pathname + u.search); }
+      flash = status === 'redo' ? { cls: '', html: `↩️ <b>«${Z.esc(L.title)}»</b>: повернуто дитині на доопрацювання — ${parts.map(p => PART_SHORT[p]).join(', ')}.${comment ? ' Ваш коментар буде видно в уроці.' : ''}` } : { cls: 'done', html: `✅ <b>«${Z.esc(L.title)}»</b>: домашнє прийнято.` };
+      render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
     document.getElementById('resetLesson').onclick = () => { if (confirm('Видалити весь прогрес цього уроку? Дитина проходитиме його з початку.')) { Z.progress.remove(id); Z.progress.log({ type: 'reset', id }); render(); } };
   }
 
@@ -129,8 +149,10 @@
   }
 
   /* ---- рендер ---- */
+  /* одноразова плашка з результатом дії (напр. після перевірки домашнього) */
+  function flashHTML() { if (!flash) return ''; const f = flash; flash = null; return `<div class="notice ${f.cls}" role="status">${f.html}</div>`; }
   function render() {
-    root.innerHTML = `<h1 style="margin:10px 0 4px">👨‍👩‍👦 Кабінет батьків</h1>` + tabsHTML() + (tab === 'overview' ? overview() : tab === 'lessons' ? lessonsTab() : tab === 'journal' ? journal() : tab === 'report' ? report() : settingsTab());
+    root.innerHTML = `<h1 style="margin:10px 0 4px">👨‍👩‍👦 Кабінет батьків</h1>` + tabsHTML() + flashHTML() + (tab === 'overview' ? overview() : tab === 'lessons' ? lessonsTab() : tab === 'journal' ? journal() : tab === 'report' ? report() : settingsTab());
     root.querySelectorAll('button[data-tab]').forEach(b => b.onclick = () => { tab = b.dataset.tab; openId = null; render(); });
     document.getElementById('exit').onclick = () => { sessionStorage.removeItem('z4.parent'); location.href = 'index.html'; };
     root.querySelectorAll('button[data-w]').forEach(b => b.onclick = () => { week = Number(b.dataset.w); onlyHW = false; openId = null; render(); });
