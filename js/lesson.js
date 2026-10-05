@@ -24,7 +24,7 @@
   document.addEventListener('visibilitychange', () => Z.progress.set(id, rec)); window.addEventListener('beforeunload', () => Z.progress.set(id, rec));
 
   /* навігація: попередній/наступний урок за розкладом */
-  const ordered = Z.state.plan; const pos = ordered.findIndex(l => l.id === id); const next = ordered[pos + 1], prev = ordered[pos - 1];
+  const ordered = Z.state.plan; const pos = ordered.findIndex(l => l.id === id); const next = ordered[pos + 1];
 
   const STEPS = [['theory', '1. Теорія'], ['practice', '2. Практика'], ['homework', '3. Домашнє завдання'], ['summary', '4. Підсумок']];
   let step = !rec.theory ? 'theory' : !rec.practice.done ? 'practice' : !rec.homework.submitted ? 'homework' : 'summary';
@@ -174,7 +174,7 @@
       <div class="card" style="margin:0"><small class="muted">Час на уроці</small><div style="font-weight:800;font-size:1.1rem">${Z.fmtTime(rec.time)}</div><small class="muted">рекомендовано ~${L.minutes} хв</small></div></div>
       ${st === 'done' ? '<p class="notice" style="border-color:var(--ok)">✅ Урок виконано повністю. Так тримати!</p>' : '<p class="notice">Щоб урок зарахувався, потрібно завершити практику і здати домашнє завдання.</p>'}
       ${refl}
-      <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">${prev ? `<a class="btn ghost" href="${Z.lessonURL(prev.id)}">◀ ${Z.esc(Z.state.subjMap[prev.subject].short)}</a>` : ''}<a class="btn sec" href="week.html?w=${meta.week}">До розкладу тижня</a>${next ? `<a class="btn" href="${Z.lessonURL(next.id)}">Наступний урок: ${Z.esc(Z.state.subjMap[next.subject].short)} ▶</a>` : '<a class="btn" href="index.html">На головну</a>'}</p></div>`;
+      <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">${next ? `<a class="btn" href="${Z.lessonURL(next.id)}">Наступний урок: ${Z.esc(Z.state.subjMap[next.subject].short)} ▶</a>` : ''}<a class="btn sec" href="index.html">📚 До уроків</a><a class="btn ghost" href="week.html?w=${meta.week}">Розклад тижня</a></p></div>`;
   }
 
   /* ---------- контекст для ШІ-помічника «Поясняйко» (js/ai-help.js) ---------- */
